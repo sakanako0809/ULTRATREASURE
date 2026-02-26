@@ -319,6 +319,7 @@ footer{
 	bottom: 56px;
 	right: 56px;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	width: 48px;
@@ -327,8 +328,36 @@ footer{
 	border: none;
 	border-radius: 50%;
 	box-shadow: 0 0 30px -2px rgba(0,0,0,.15);
+	cursor: pointer;
+	overflow: hidden;
 }
-
+.btn_gotop i{
+	transition: all .5s .25s cubic-bezier(.1,.75,.25,1);
+}
+.btn_gotop i:before{
+	content: '\f077';
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	font-size: 16px;
+	line-height: 16px;
+	color: #000;
+}
+.btn_gotop i:first-child{
+	opacity: 1;
+	transform: translateY(11px);
+}
+.btn_gotop:hover i:first-child{
+	opacity: 0;
+	transform: translateY(-15px);
+}
+.btn_gotop i:last-child{
+	opacity: 0;
+	transform: translateY(24px);
+}
+.btn_gotop:hover i:last-child{
+	opacity: 1;
+	transform: translateY(-10px);
+}
 /* ===== FOOTER END ===== */
 
 

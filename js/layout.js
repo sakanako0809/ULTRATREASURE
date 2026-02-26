@@ -1,3 +1,7 @@
+/* =============================
+   載入 HTML component
+============================= */
+
 function loadHTML(id, url, callback) {
   fetch(url)
     .then(res => res.text())
@@ -6,6 +10,10 @@ function loadHTML(id, url, callback) {
       if (callback) callback();
     });
 }
+
+/* =============================
+   Header active menu
+============================= */
 
 function setActiveMenu() {
   const currentPage =
@@ -19,7 +27,7 @@ function setActiveMenu() {
 }
 
 /* =============================
-   ⭐ 表單初始化寫成 function
+   表單驗證
 ============================= */
 
 function initForm() {
@@ -31,7 +39,7 @@ function initForm() {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   form.querySelectorAll("[required]").forEach(input => {
-    input.addEventListener("blur", function () {
+    input.addEventListener("blur", () => {
       validateInput(input);
     });
   });
@@ -72,58 +80,76 @@ function initForm() {
   }
 }
 
-// 直接將 initAccordion 改寫成監聽整個 document
-function initAccordion() {
-    document.addEventListener('click', (e) => {
-        // 檢查點擊的是否為 header 或 header 內的子元素
-        const header = e.target.closest('.accordion_header');
-        if (!header) return;
-
-        const isActive = header.classList.contains('active');
-
-        // 1. 關閉頁面上「所有」的手風琴項目 (達成一次只能開一個)
-        document.querySelectorAll('.accordion_header').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        // 2. 如果點擊的那個本來是關的，就打開它
-        if (!isActive) {
-            header.classList.add('active');
-        }
-    });
-}
-
-// 在 DOM 加載完畢後執行一次監聽即可
-document.addEventListener('DOMContentLoaded', () => {
-    initAccordion();
-
-    function initBackToTop() {
-      const btn = document.getElementById("backToTop");
-      if (!btn) return;
-
-      window.addEventListener("scroll", () => {
-        if (document.documentElement.scrollTop > 200) {
-          btn.style.display = "block";
-        } else {
-          btn.style.display = "none";
-        }
-      });
-
-      btn.addEventListener("click", () => {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-      });
-    }
-    // 其他初始化...
-});
-
 /* =============================
-   載入區塊
+   Accordion
 ============================= */
 
-loadHTML('header', 'components/header.html', setActiveMenu);
+function initAccordion() {
+  document.addEventListener('click', (e) => {
 
-// ⭐ 重點：footer 載入完成後再初始化表單
-loadHTML('footer', 'components/footer.html', initForm);
+    const header = e.target.closest('.accordion_header');
+    if (!header) return;
+
+    const isActive = header.classList.contains('active');
+
+    document.querySelectorAll('.accordion_header').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    if (!isActive) {
+      header.classList.add('active');
+    }
+  });
+}
+
+/* =============================
+   Back To Top
+============================= */
+
+function initBackToTop() {
+
+  const btn = document.getElementById("backToTop");
+  if (!btn) return;
+
+  window.addEventListener("scroll", () => {
+
+    if (document.documentElement.scrollTop > 200) {
+      btn.classList.add("show");
+    } else {
+      btn.classList.remove("show");
+    }
+
+  });
+
+  btn.addEventListener("click", () => {
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  });
+}
+
+/* =============================
+   App 初始化
+============================= */
+
+function initApp() {
+
+  initAccordion();
+
+  loadHTML('header', 'components/header.html', setActiveMenu);
+
+  loadHTML('footer', 'components/footer.html', () => {
+    initForm();
+    initBackToTop();
+  });
+
+}
+
+/* =============================
+   DOM ready
+============================= */
+
+document.addEventListener('DOMContentLoaded', initApp);
