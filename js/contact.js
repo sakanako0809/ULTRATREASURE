@@ -1,10 +1,19 @@
-/* =============================
-   Google Translate Loader
-============================= */
+
+function loadHTML(id, url, callback) {
+  const el = document.getElementById(id);
+  if (!el) return; // 沒有容器就跳過
+
+  fetch(url)
+    .then(res => res.text())
+    .then(html => {
+      el.innerHTML = html;
+      if (callback) callback();
+    })
+    .catch(err => console.error("loadHTML error:", err));
+}
+
 let googleTranslateInitialized = false;
-
 function loadGoogleTranslate(callback) {
-
   if (window.google && google.translate && google.translate.TranslateElement) {
     callback();
     return;
@@ -12,36 +21,37 @@ function loadGoogleTranslate(callback) {
 
   if (!document.getElementById("google-translate-script")) {
     const script = document.createElement("script");
-    script.id = "google-translate-script";
     script.src = "//translate.google.com/translate_a/element.js";
     script.async = true;
-
     document.body.appendChild(script);
   }
 
   const checkReady = setInterval(() => {
-    if (window.google &&
-        google.translate &&
-        google.translate.TranslateElement) {
-
+    if (window.google && google.translate && google.translate.TranslateElement) {
       clearInterval(checkReady);
       callback();
     }
   }, 100);
 }
 
+function getCookie(name) {
+    const cookies = document.cookie.split(';').map(c => c.trim());
+    let matched = cookies
+        .filter(c => c.startsWith(name + '='))
+        .map(c => c.substring((name + '=').length));
 
-/* =============================
-   載入 HTML component
-============================= */
+    if (matched.length === 0) return null;
+    matched.sort((a, b) => b.length - a.length);
 
-function loadHTML(id, url, callback) {
-  fetch(url)
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById(id).innerHTML = html;
-      if (callback) callback();
-    });
+    return matched[0];
+}
+
+function clearGoogleTranslateCookie() {
+  const expires = 'Thu, 01 Jan 1970 00:00:00 GMT';
+  // 同時刪除主網域與子網域
+  document.cookie = `googtrans=; path=/; domain=.ultratreasure3688.com; expires=${expires}`;
+  document.cookie = `googtrans=; path=/; domain=ultratreasure3688.com; expires=${expires}`;
+  document.cookie = `googtrans=; path=/; expires=${expires}`; // 當前 host
 }
 
 /* =============================
@@ -49,7 +59,9 @@ function loadHTML(id, url, callback) {
 ============================= */
 
 function setActiveMenu() {
-  const currentPage = location.pathname.split('/').pop() || 'index.html';
+  const currentPage =
+    location.pathname.split('/').pop() || 'index.html';
+
   document.querySelectorAll('.nav_link').forEach(link => {
     if (link.getAttribute('href') === currentPage) {
       link.classList.add('active');
@@ -58,11 +70,10 @@ function setActiveMenu() {
 
   loadGoogleTranslate(() => {
     if (!googleTranslateInitialized) {
-
       new google.translate.TranslateElement({
         pageLanguage: 'en',
         includedLanguages: 'zh-TW',
-        autoDisplay: false,
+        autoDisplay: false
       }, 'google_language_translator');
 
       googleTranslateInitialized = true;
@@ -108,35 +119,15 @@ function initGoogleTranslateButtons() {
     });
 }
 
-function getCookie(name) {
-    const cookies = document.cookie.split(';').map(c => c.trim());
-    let matched = cookies
-        .filter(c => c.startsWith(name + '='))
-        .map(c => c.substring((name + '=').length));
-
-    if (matched.length === 0) return null;
-    matched.sort((a, b) => b.length - a.length);
-
-    return matched[0];
-}
-
-function clearGoogleTranslateCookie() {
-    const expires = 'Thu, 01 Jan 1970 00:00:00 GMT';
-    // 同時刪除主網域與子網域
-    document.cookie = `googtrans=; path=/; domain=.ultratreasure3688.com; expires=${expires}`;
-    document.cookie = `googtrans=; path=/; domain=ultratreasure3688.com; expires=${expires}`;
-    document.cookie = `googtrans=; path=/; expires=${expires}`; // 當前 host
-}
-
-
-
 /* =============================
    表單驗證
 ============================= */
 
 function initForm() {
   const form = document.getElementById("myForm");
-  if (!form) return;
+  if (!form || form.dataset.initialized) return;
+
+  form.dataset.initialized = "true";
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -147,7 +138,8 @@ function initForm() {
   });
 
   form.addEventListener("submit", async function (e) {
-    e.preventDefault(); // 阻止跳轉
+    e.preventDefault();
+
     let hasError = false;
 
     form.querySelectorAll("[required]").forEach(input => {
@@ -159,37 +151,45 @@ function initForm() {
     if (hasError) return;
 
     const formData = new FormData(form);
-    try {
-				const response = await fetch('send.php', {
-					method: 'POST',
-					body: formData
-				});
 
-				const result = await response.json();
-				if (result.data) {
-          form.reset();
-					alert("Thank you for your letter!")
-				}
-			} catch (error) {
-				console.error(error);
-			}
+    try {
+      const response = await fetch('send.php', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.data) {
+        form.reset();
+        alert("Thank you for your letter!");
+      }
+
+    } catch (error) {
+      console.error("Submit error:", error);
+    }
   });
 
   function validateInput(input) {
     const group = input.closest(".form_group");
-    const errorMsg = group.querySelector(".msg_error");
+    if (!group) return true;
 
+    const errorMsg = group.querySelector(".msg_error");
     group.classList.remove("error");
 
     if (input.value.trim() === "") {
-      errorMsg.textContent = "Please complete this required field.";
+      if (errorMsg) {
+        errorMsg.textContent = "Please complete this required field.";
+      }
       group.classList.add("error");
       return false;
     }
 
     if (input.type === "email") {
       if (!emailPattern.test(input.value.trim())) {
-        errorMsg.textContent = "Email must be formatted correctly.";
+        if (errorMsg) {
+          errorMsg.textContent = "Email must be formatted correctly.";
+        }
         group.classList.add("error");
         return false;
       }
@@ -205,19 +205,15 @@ function initForm() {
 
 function initAccordion() {
   document.addEventListener('click', (e) => {
-
     const header = e.target.closest('.accordion_header');
     if (!header) return;
 
     const isActive = header.classList.contains('active');
 
-    document.querySelectorAll('.accordion_header').forEach(btn => {
-      btn.classList.remove('active');
-    });
+    document.querySelectorAll('.accordion_header')
+      .forEach(btn => btn.classList.remove('active'));
 
-    if (!isActive) {
-      header.classList.add('active');
-    }
+    if (!isActive) header.classList.add('active');
   });
 }
 
@@ -226,46 +222,40 @@ function initAccordion() {
 ============================= */
 
 function initBackToTop() {
-
   const btn = document.getElementById("backToTop");
   if (!btn) return;
 
   window.addEventListener("scroll", () => {
-
     if (document.documentElement.scrollTop > 200) {
       btn.classList.add("show");
     } else {
       btn.classList.remove("show");
     }
-
   });
 
   btn.addEventListener("click", () => {
-
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
-
   });
 }
 
 /* =============================
-   App 初始化
+   App 初始化（contact 專用安全版）
 ============================= */
 
 function initApp() {
+
   initAccordion();
+  initForm();   
+  initBackToTop();
+
   loadHTML('header', 'components/header.html', () => {
     setActiveMenu();   
     initGoogleTranslateButtons();
   });
-
-  loadHTML('footer', 'components/footer.html', () => {
-    initForm();
-    initBackToTop();
-  });
-
+  loadHTML('footer', 'components/footer.html');
 }
 
 /* =============================

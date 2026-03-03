@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>ULTRA TREASURE</title>
+	<title translate="no">ULTRA TREASURE</title>
 	<link rel="stylesheet" href="css/reset.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -23,19 +23,19 @@
 					<fieldset class="col_2">
 						<div class="form_group">
 							<label class="required">First Name</label>
-							<input type="text" class="" required><!-- class="error"-->
+							<input type="text" name="firstName" required><!-- class="error"-->
 							<p class="msg_error">Please complete this required field.</p>
 						</div>
 						<div class="form_group">
 							<label class="required">Last Name</label>
-							<input type="text" required>
+							<input type="text" name="lastName" required>
 							<p class="msg_error">Please complete this required field.</p>
 						</div>
 					</fieldset>
 					<fieldset>
 						<div class="form_group">
 							<label class="required">Company name</label>
-							<input type="text" required>
+							<input type="text" name="company" required>
 							<p class="msg_error">Please complete this required field.</p>
 						</div>
 					</fieldset>
@@ -50,18 +50,18 @@
 						<div class="form_group">
 							<label class="required">Inquiry Details</label>
 							<legend>Please briefly tell us your project requirements.</legend>
-							<textarea name="" id="" required></textarea>
+							<textarea name="message" id="" required></textarea>
 							<p class="msg_error">Please complete this required field.</p>
 						</div>
 					</fieldset>
 					<fieldset>
 						<div>
 							<label>Which region are you based in?</label>
-							<select name="" id="">
-								<option disabled selected>Please Select</option>
-								<option value="美洲North America">美洲North America</option>
-								<option value="亞洲Asia">亞洲Asia</option><option value="歐洲EMEA">歐洲EMEA</option>
-								<option value="澳洲Oceania">澳洲Oceania</option>
+							<select name="area">
+								<option value="North America">North America</option>
+								<option value="Asia">Asia</option>
+								<option value="EMEA">EMEA</option>
+								<option value="Oceania">Oceania</option>
 							</select>
 						</div>
 					</fieldset>
@@ -71,6 +71,6 @@
 		</div>
 	</main>
 
-	<script src="js/layout.js"></script>
+	<script src="js/contact.js"></script>
 </body>
 </html>

@@ -1,3 +1,18 @@
+<style>
+	body {
+		top: unset !important;
+	}
+	body > .skiptranslate {
+		display: none;
+	}
+	#goog-gt-vt{
+			display: none !important;
+	} 
+	.chglan{
+		cursor: pointer;
+	}
+</style>
+
 <div class="site_header">
 	<div class="header_logo">
 		<a href="index.html">
@@ -45,11 +60,14 @@
 					</ul>
 				</div>
 			</li>
-			<li>
-				<a href="" class="nav_link">中文</a>
+			<li class="nav_link" >
+				<div class="chglan" data-lan="zh-TW" translate="no">中文</div>
+				<div class="chglan" data-lan="en" style="display: none;" translate="no">English</div>
 			</li>
 		</ul>
 
 	</nav>
 	<a href="contact.html" class="btn_contact">CONTACT US</a>
 </div>
+<div id="google_language_translator" style="display: none;"></div>
+
