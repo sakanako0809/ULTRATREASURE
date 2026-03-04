@@ -208,6 +208,7 @@ footer{
 .area_form>div{
 	grid-template-columns: 45% 1fr;
 	grid-auto-rows: auto;
+	align-items: center;
 }
 .area_form section{
 	display: flex;
