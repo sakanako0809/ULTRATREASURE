@@ -68,17 +68,17 @@ function setActiveMenu() {
     }
   });
 
-  loadGoogleTranslate(() => {
-    if (!googleTranslateInitialized) {
-      new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'zh-TW',
-        autoDisplay: false
-      }, 'google_language_translator');
+  // loadGoogleTranslate(() => {
+  //   if (!googleTranslateInitialized) {
+  //     new google.translate.TranslateElement({
+  //       pageLanguage: 'en',
+  //       includedLanguages: 'zh-TW',
+  //       autoDisplay: false
+  //     }, 'google_language_translator');
 
-      googleTranslateInitialized = true;
-    }
-  });
+  //     googleTranslateInitialized = true;
+  //   }
+  // });
 }
 
 function initGoogleTranslateButtons() {
@@ -151,23 +151,10 @@ function initForm() {
     if (hasError) return;
 
     const formData = new FormData(form);
-
-    try {
-      const response = await fetch('send.php', {
-        method: 'POST',
-        body: formData
-      });
-
-      const result = await response.json();
-
-      if (result.data) {
-        form.reset();
-        alert("Thank you for your letter!");
-      }
-
-    } catch (error) {
-      console.error("Submit error:", error);
-    }
+    fetch('send.php', { method: 'POST', body: formData});
+    form.reset();
+    document.querySelector('#myForm').style.display = 'none';
+    document.querySelector('#sendover').style.display = '';
   });
 
   function validateInput(input) {
