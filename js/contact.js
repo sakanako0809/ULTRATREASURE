@@ -98,10 +98,10 @@ function initGoogleTranslateButtons() {
         address_en.style.display = 'none';
     } else {
         // 英文或沒 cookie 顯示切中文按鈕
-        btnZh.style.display = 'inline-block';
+        btnZh.style.display = 'flex';
         btnEn.style.display = 'none';
         address_tw.style.display = 'none';
-        address_en.style.display = 'inline-block';
+        address_en.style.display = 'flex';
     }
 
     document.querySelectorAll('.chglan').forEach(btn => {
@@ -126,9 +126,9 @@ function initGoogleTranslateButtons() {
 
             if(lang == "en"){
               address_tw.style.display = 'none';
-              address_en.style.display = 'inline-block';
+              address_en.style.display = 'flex';
             } else {
-              address_tw.style.display = 'inline-block';
+              address_tw.style.display = 'flex';
               address_en.style.display = 'none';
             }
         });
