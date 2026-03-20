@@ -56,18 +56,18 @@ function setActiveMenu() {
     }
   });
 
-  // loadGoogleTranslate(() => {
-  //   if (!googleTranslateInitialized) {
+  loadGoogleTranslate(() => {
+    if (!googleTranslateInitialized) {
 
-  //     new google.translate.TranslateElement({
-  //       pageLanguage: 'en',
-  //       includedLanguages: 'zh-TW',
-  //       autoDisplay: false,
-  //     }, 'google_language_translator');
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'zh-TW',
+        autoDisplay: false,
+      }, 'google_language_translator');
 
-  //     googleTranslateInitialized = true;
-  //   }
-  // });
+      googleTranslateInitialized = true;
+    }
+  });
 }
 
 function initGoogleTranslateButtons() {

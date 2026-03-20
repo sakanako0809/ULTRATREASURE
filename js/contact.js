@@ -68,32 +68,40 @@ function setActiveMenu() {
     }
   });
 
-  // loadGoogleTranslate(() => {
-  //   if (!googleTranslateInitialized) {
-  //     new google.translate.TranslateElement({
-  //       pageLanguage: 'en',
-  //       includedLanguages: 'zh-TW',
-  //       autoDisplay: false
-  //     }, 'google_language_translator');
+  loadGoogleTranslate(() => {
+    if (!googleTranslateInitialized) {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'zh-TW',
+        autoDisplay: false
+      }, 'google_language_translator');
 
-  //     googleTranslateInitialized = true;
-  //   }
-  // });
+      googleTranslateInitialized = true;
+    }
+  });
 }
 
 function initGoogleTranslateButtons() {
     const googtrans = getCookie('googtrans');
     const btnZh = document.querySelector('.chglan[data-lan="zh-TW"]');
     const btnEn = document.querySelector('.chglan[data-lan="en"]');
+
+    const address_tw = document.querySelector('#address_tw');
+    const address_en = document.querySelector('#address_en');
+
     if(!btnZh || !btnEn) return;
     if(googtrans && googtrans.includes('zh-TW')) {
         // 已經翻成中文 顯示切回英文按鈕
         btnZh.style.display = 'none';
         btnEn.style.display = 'inline-block';
+        address_tw.style.display = 'inline-block';
+        address_en.style.display = 'none';
     } else {
         // 英文或沒 cookie 顯示切中文按鈕
         btnZh.style.display = 'inline-block';
         btnEn.style.display = 'none';
+        address_tw.style.display = 'none';
+        address_en.style.display = 'inline-block';
     }
 
     document.querySelectorAll('.chglan').forEach(btn => {
@@ -115,6 +123,14 @@ function initGoogleTranslateButtons() {
             btn.style.display = 'none';
             let other = document.querySelector(`.chglan[data-lan="${lang === 'zh-TW' ? 'en' : 'zh-TW'}"]`);
             if(other) other.style.display = 'inline-block';
+
+            if(lang == "en"){
+              address_tw.style.display = 'none';
+              address_en.style.display = 'inline-block';
+            } else {
+              address_tw.style.display = 'inline-block';
+              address_en.style.display = 'none';
+            }
         });
     });
 }
